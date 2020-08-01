@@ -24,22 +24,28 @@ const store = new Vuex.Store({
       { id: 12, title: '12 Monkeys', genre: 'Sci-fi', score: 0 },
     ]
   },
+  // Procesar los datos antes de usarlos
   getters: {
     getMoviesByGenre() {
       return function(genre) {
-        return store.state.movies.filter(movie => movie.genre == genre)
+        // Películas por género
+        let moviesByGenre = store.state.movies.filter(movie => movie.genre == genre);
+        // Las ordenamos por su id
+        moviesByGenre.sort((movie1, movie2) => movie1.id - movie2.id);
+        return moviesByGenre;
       }
     }
   },
+  // Modificar el estado de nuestro Store
   mutations: {
     addMovieScore(state, idMovie) {
       // 1. Nos traemos la película
       const movieEncontrada = state.movies.find(movie => movie.id == idMovie);
 
       // 2.Modificar la pelicula encontrada (forma mutada)
-      movieEncontrada.score = movieEncontrada.score + 1;
-      /*
-      3. Forma Inmutada
+      // movieEncontrada.score = movieEncontrada.score + 1;
+      
+      // 3. Forma Inmutada
       const movieActualizada = {
         ...movieEncontrada,
         score: movieEncontrada.score + 1
@@ -47,16 +53,28 @@ const store = new Vuex.Store({
       state.movies = [
         ...state.movies.filter(movie => movie.id != idMovie),
         movieActualizada
-      ]*/
+      ]
     },
     substractMovieScore(state, idMovie) {
       // 1. Nos traemos la película
       const movieEncontrada = state.movies.find(movie => movie.id == idMovie);
 
       // 2.Modificar la pelicula encontrada (forma mutada)
-      movieEncontrada.score = movieEncontrada.score - 1;
+      // movieEncontrada.score = movieEncontrada.score - 1;
+
+      // 3. Forma Inmutada
+      const movieActualizada = {
+        ...movieEncontrada,
+        score: movieEncontrada.score - 1
+      }
+      state.movies = [
+        ...state.movies.filter(movie => movie.id != idMovie),
+        movieActualizada
+      ]
     }
-  }
+  },
+  // Hacer llamadas asíncronas (que no bloqueen) y después hacer una mutación
+  // actions: {}
 })
 
 new Vue({
